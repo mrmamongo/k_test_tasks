@@ -1,43 +1,41 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 
-namespace Task_1
+namespace Task_1_1
 {
-    public class DirectoryQueue
+    public class EntityQueue
     {
-        private static DirectoryQueue _instance;
+        private static EntityQueue _instance;
         private readonly object _locker = new();
-        private readonly Queue<DirectoryInfo> _itemQ = new();
+        private readonly Queue<Pair<bool, FileSystemInfo>> _itemQ = new(); // bool: Dir - true, File - false
         
-        private DirectoryQueue() {}
-        public static DirectoryQueue GetInstance()
+        private EntityQueue() {}
+        
+        public static EntityQueue GetInstance()
         {
-            return _instance ??= new DirectoryQueue();
+            return _instance ??= new EntityQueue();
         }
         
-        public void Enqueue (DirectoryInfo item) 
+        public void Enqueue (Pair<bool, FileSystemInfo> item) 
         {
             lock (_locker)
             {
                 _itemQ.Enqueue(item);
-                Monitor.Pulse(_locker);
             }
         }
 
-        public void Enqueue(IEnumerable<DirectoryInfo> items)
+        public void Enqueue(IEnumerable<Pair<bool, FileSystemInfo>> items)
         {
             lock (_locker)
             {
                 foreach (var item in items)
                 {
                     _itemQ.Enqueue(item);
-                    Monitor.Pulse(_locker);
                 }
             }
         }
 
-        public bool Dequeue(ref DirectoryInfo item)
+        public bool Dequeue(ref Pair<bool, FileSystemInfo> item)
         {
             lock (_locker)
             {
@@ -46,9 +44,7 @@ namespace Task_1
                     return false;
                 }
                 item = _itemQ.Dequeue();
-                Monitor.Pulse(_locker);
             }
-
             return true;
         }
     }

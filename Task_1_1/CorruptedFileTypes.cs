@@ -1,6 +1,6 @@
-﻿namespace Task_1
+﻿namespace Task_1_1
 {
-    public enum CorruptedFiles
+    public enum CorruptedFileTypes
     {
         JS, rm_rf, Rundll32, Clean, Error, Sum
     }
