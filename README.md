@@ -1,2 +1,2 @@
 # k_test_tasks
-Some solutions of tasks to SafeBoard_2021
+Some solutions of tasks for SafeBoard_2021
