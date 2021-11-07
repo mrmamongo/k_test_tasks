@@ -1,4 +1,4 @@
-﻿namespace Task_1_1
+﻿namespace scan_util
 {
     public enum CorruptedFileTypes
     {

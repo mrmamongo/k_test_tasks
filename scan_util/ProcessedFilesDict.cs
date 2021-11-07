@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Task_1_1
+namespace scan_util
 {
     public class ProcessedFilesDict
     {
@@ -31,8 +31,11 @@ namespace Task_1_1
         {
             lock (_locker)
             {
-                _dictionary[fileTypeType]++;
-                _dictionary[CorruptedFileTypes.Sum]++;
+                if (fileTypeType != CorruptedFileTypes.Sum)
+                {
+                    _dictionary[fileTypeType]++;
+                    _dictionary[CorruptedFileTypes.Sum]++;   
+                }
             }
         }
 

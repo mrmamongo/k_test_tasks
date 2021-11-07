@@ -1,16 +1,20 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
-namespace Task_1_1
+namespace scan_util
 {
     public class Manager
     {
+        private readonly List<Task<CorruptedFileTypes>> _tasks = new ();
         private int _tasksStarted;
         private int _tasksHandled;
-        public void AddWorker()
+
+        public async Task AddWorker()
         {
             Interlocked.Increment(ref _tasksStarted);
-            ThreadPool.QueueUserWorkItem(_ =>
+            await Task.Run(async () =>
             {
                 const short limit = 5;
                 short f = 0;
@@ -20,12 +24,14 @@ namespace Task_1_1
                 {
                     if (EntityQueue.GetInstance().Dequeue(ref entity))
                     {
-                        ProcessedFilesDict.GetInstance().Add(inspector.Inspect(entity));
-                        AddWorker();
+                        var inspection = inspector.Inspect(entity);
+                        _tasks.Add(inspection);
+                        ProcessedFilesDict.GetInstance().Add(await inspection);
+                        await AddWorker();
                         return;
                     }
 
-                    Thread.Sleep(500);
+                    Thread.Sleep(50);
                     f++;
                 }
 
@@ -35,9 +41,9 @@ namespace Task_1_1
 
         public void WaitForTasks()
         {
-            if (_tasksStarted > _tasksHandled)
+            if (_tasks.Count > _tasksHandled)
             {
-                Thread.Sleep(500);
+                Thread.Sleep(50);
             }
         }
     }

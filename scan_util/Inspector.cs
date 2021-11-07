@@ -2,8 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Task_1_1
+namespace scan_util
 {
     public class Inspector
     {
@@ -12,12 +13,12 @@ namespace Task_1_1
             "Rundll32 sus.dll SusEntry"
         };
 
-        public CorruptedFileTypes Inspect(in Pair<bool, FileSystemInfo> entity)
+        public async Task<CorruptedFileTypes> Inspect(Pair<bool, FileSystemInfo> entity)
         {
-            return entity.Key ? InspectDirectory((DirectoryInfo)entity.Value) : InspectFile((FileInfo)entity.Value);
+            return entity.Key ? InspectDirectory((DirectoryInfo)entity.Value) : await InspectFile((FileInfo)entity.Value);
         }
 
-        private CorruptedFileTypes InspectFile(FileInfo file)
+        private async Task<CorruptedFileTypes> InspectFile(FileInfo file)
         {
             try
             {
@@ -29,9 +30,9 @@ namespace Task_1_1
                         return CorruptedFileTypes.Clean;
                 }
 
-                using var fileStream = file.OpenRead();
+                await using var fileStream = file.OpenRead();
                 var arr = new byte[fileStream.Length];
-                fileStream.Read(arr, 0, arr.Length);
+                await fileStream.ReadAsync(arr, 0, arr.Length);
                 var textFromFile = Encoding.Default.GetString(arr);
                 if (file.Extension == ".js" && textFromFile.Contains(CorruptedStrings[0]))
                 {
@@ -68,7 +69,7 @@ namespace Task_1_1
                         .ConvertAll(f => new Pair<bool, FileSystemInfo>(false, f))
                     );
 
-                return CorruptedFileTypes.Clean;
+                return CorruptedFileTypes.Sum;
             }
             catch (Exception)
             {

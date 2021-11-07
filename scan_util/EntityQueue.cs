@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Task_1_1
+namespace scan_util
 {
     public class EntityQueue
     {

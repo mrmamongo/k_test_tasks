@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using static Task_1_1.CorruptedFileTypes;
-using static Task_1_1.ProcessedFilesDict;
+using System.Threading.Tasks;
+using static scan_util.CorruptedFileTypes;
+using static scan_util.ProcessedFilesDict;
 
-namespace Task_1_1
+namespace scan_util
 {
     internal static class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             if (args.Length != 1)
             {
@@ -35,7 +36,7 @@ namespace Task_1_1
             
             EntityQueue.GetInstance().Enqueue(new Pair<bool, FileSystemInfo>(true, firstEntry));
             var manager = new Manager();
-            manager.AddWorker();
+            await manager.AddWorker();
             manager.WaitForTasks();
 
             PrintSummary(stopwatch);
