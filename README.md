@@ -69,7 +69,7 @@ Exection time: 00:00:31
 URI: ```http://localhost:<port>/scan_util/&path=<path/to/dir>```
 Сервер отправляет ответом Task_ID
 Далее обработчик папок рекурсивно обходит все папки внутри и отправляет их севреру в JSON следующего вида
-``` JSON
+```
 {
   Task_ID: <int>
   Files: [
