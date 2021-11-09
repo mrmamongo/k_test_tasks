@@ -64,6 +64,15 @@ Exection time: 00:00:31
 Класс ```ConnectionManager``` обрабатывает входящие запросы и объект Manager создаётся для каждого отдельного подключения
 ```ConnectionManager``` имеет поле Task_ID, которому присваивается ID потока, в котором обрабатывается соединение. Поскольку и клиент, и сервис запускаются на одном компьютере, коллизий ID получится таким образом избежать.
 
+После отработки алгоритма сканирования, результат сохраняется в локальное хранилище ```Dictionary<long, Dictionary<CorruptedFileTypes, int>> ResourceStorage```
+
+Где ```CorruptedFileTypes```:
+```C#
+public enum CorruptedFileTypes
+    {
+        JS, rm_rf, Rundll32, Clean, Error, Sum
+    }
+```
 ## Клиент
 Основной класс ```HttpClient``` подключается по предварительно настроенному адресу к серверу и отправляет сначала "Заголовок", в котором находится полный путь к папке
 URI: ```http://localhost:<port>/scan_util/&path=<path/to/dir>```
